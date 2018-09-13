@@ -23,9 +23,9 @@
   "dataServices": [
     {
       "type": "router",
-      "name": "hello",
-      "filename": "helloWorld.js",
-      "routerFactory": "helloWorldRouter",
+      "name": "gremlin",
+      "filename": "graphService.js",
+      "routerFactory": "graphServiceRouter",
       "dependenciesIncluded": true,
       "initializerLookupMethod": "external"
     }
