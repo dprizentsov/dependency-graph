@@ -16,11 +16,19 @@
     "defaultWindowStyle": {
       "x": 0,
       "y": 0,
-      "width": 400,
-      "height": 300
+      "width": 1100,
+      "height": 800
     }
   },
   "dataServices": [
+    {
+      "type": "router",
+      "name": "discovery",
+      "filename": "graphService.js",
+      "routerFactory": "discoveryServiceRouter",
+      "dependenciesIncluded": true,
+      "initializerLookupMethod": "external"
+    },
     {
       "type": "router",
       "name": "gremlin",
