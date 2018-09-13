@@ -7,7 +7,11 @@
     "lint": "tslint -c tslint.json \"./**/*.ts\""
   },
   "private": true,
-  "dependencies": {},
+  "dependencies": {
+    "@types/d3": "^5.0.0",
+    "d3": "^5.7.0",
+    "watch": "^1.0.2"
+  },
   "devDependencies": {
     "@angular/animations": "~6.0.9",
     "@angular/common": "~6.0.9",

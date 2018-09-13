@@ -11,7 +11,15 @@
 -->
 
 <div class="app-component">
-  <div id="container"></div>
+  <div id="container">
+    <div>
+      <!-- <select [(ngModel)]="selectedValue" (change)="onSelectChange()">
+          <option *ngFor="let node of allNodes" [value]="node.id">{{node.id + ' (' +node.linkCount + ')'}}</option>
+      </select> -->
+    </div>
+    <graph [nodes]="nodes" [links]="links"></graph>
+
+  </div>
 </div>
 
 <!-- 

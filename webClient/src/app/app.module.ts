@@ -13,21 +13,32 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { HttpModule } from '@angular/http';
 
 
 import { AppComponent } from './app.component';
 import {HelloService} from './services/hello.service';
 
+import { D3Service, D3_DIRECTIVES } from './d3';
+
+import { GraphComponent } from './visuals/graph/graph.component';
+import { SHARED_VISUALS } from './visuals/shared';
+
+
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    D3_DIRECTIVES,
+    GraphComponent,
+    SHARED_VISUALS
   ],
   imports: [
     // BrowserModule, /* remove this for within-MVD development */
     CommonModule,
-    FormsModule
+    FormsModule,
+    HttpModule
   ],
-  providers: [HelloService],
+  providers: [HelloService, D3Service],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

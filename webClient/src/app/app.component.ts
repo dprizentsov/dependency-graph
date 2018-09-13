@@ -15,6 +15,9 @@ import { Component, Inject } from '@angular/core';
 import { Angular2InjectionTokens } from 'pluginlib/inject-resources';
 
 import { HelloService } from './services/hello.service';
+import { Link, Node } from './d3';
+
+import config from './app.config';
 
 @Component({
   selector: 'app-root',
@@ -29,28 +32,148 @@ export class AppComponent {
   helloText: string;
   serverResponseMessage: string;
 
+  selectedValue: any;
+  nodes: Node[] = [];
+  links: Link[] = [];
+  linksSrc: any;
+  nodesSrc: any;
+  allNodes: Node[];
+
   constructor(
     @Inject(Angular2InjectionTokens.PLUGIN_DEFINITION) private pluginDefinition: ZLUX.ContainerPluginDefinition,   
     private helloService: HelloService) {
     //is there a better way so that I can get this info into the HelloService constructor instead of calling a set method directly after creation???
     this.helloService.setDestination(RocketMVD.uriBroker.pluginRESTUri(this.pluginDefinition.getBasePlugin(), 'hello',""));
+    
+    this.linksSrc = config.dataSrc.split('\n').map(str => {
+      const arr = str.split('=');
+      const name = arr[0];
+      let parents: any[] = [];
+      if(arr[1].trim() !== ''){
+        parents = arr[1].split(' ').filter(str => str !== '');
+      }
+      return {
+        name,
+        parents
+      }
+    });
+
+    this.nodesSrc = this.links2Nodes(this.linksSrc);
+
+    console.log(this.nodesSrc);
+
+    //console.log(edges);
+    //console.log(nodes);
+
+    this.makeNodesAndLinks(this.nodesSrc, this.linksSrc, true);
   }
 
-  sayHello() {
-    this.helloService.sayHello(this.helloText)
-    .subscribe(res => {
-      const responseJson: any = res.json();
-      if (responseJson != null && responseJson.serverResponse != null) {
-        this.serverResponseMessage = 
-        `Server replied with 
-        
-        "${responseJson.serverResponse}"`;
-      } else {
-        this.serverResponseMessage = "<Empty Reply from Server>";
+  links2Nodes (links: any) {
+    return links.reduce( (acc: any, obj: any) => {
+
+      function increment(name: string){
+        // if(acc[obj.name] === undefined) {
+        //   acc[obj.name] = 0;
+        // }
+        acc[name]++;
       }
-      console.log(responseJson);
-    });
+      //acc[obj.name] = true;
+      acc[obj.name] = 0;
+      //increment(obj.name);
+      obj.parents.forEach((parent: any) => (increment(parent)));
+      return acc;
+    },{});
   }
+
+  makeNodesAndLinks(nodesSrc: any, linksSrc: any, initAllNodes: any): any {
+    this.nodes = Object.keys(nodesSrc).map( name => {
+      const node = new Node(name);
+      node.linkCount = nodesSrc[name];
+      return node;
+    });
+
+    if(initAllNodes){
+      this.allNodes = [...this.nodes];
+      this.allNodes.sort(function(a,b) {
+        return strcmp(a.id.toLowerCase(),b.id.toLowerCase() );
+      });
+    }
+
+    function strcmp(a: string, b: string)
+    {   
+        return (a<b?-1:(a>b?1:0));  
+    }
+    this.nodes.sort(function(a: Node,b: Node) {
+      return strcmp(a.id.toLowerCase(),b.id.toLowerCase() );
+    });
+    this.links = linksSrc.reduce( (acc: any, obj: any) => {
+      obj.parents.forEach( (parent: any) => {
+        acc.push({
+          source: obj.name,
+          target: parent,
+          value: 1
+        });
+      });
+      
+      return acc;
+    }, [])
+  }
+
+  onSelectChange () {
+    console.log(this.selectedValue);
+
+    // this.nodesSrc = 
+    const index = this.linksSrc.reduce((acc: any, link: any) => {
+      acc[link.name] = link;
+      return acc;
+    }, {});
+
+    const selectedEls: any = {};
+
+    function selectEls(id: any) {
+      if(selectedEls[id] === undefined){
+        selectedEls[id] = index[id];
+        index[id].parents.forEach(selectEls);
+      }
+    }
+
+    selectEls(this.selectedValue);
+
+    console.dir(selectedEls);
+
+    function values(obj: any){
+      return Object.keys(obj).reduce((acc: any, key: any) => {
+        acc.push(obj[key]); 
+        return acc;
+      }, []);
+    }
+    //const vals = [for (key of Object.keys(obj)) obj[key]];
+
+
+    const localNodes = this.links2Nodes(values(selectedEls));
+
+    console.log(localNodes);
+
+    this.makeNodesAndLinks(localNodes, values(selectedEls), false);
+    
+
+  }
+
+  // sayHello() {
+  //   this.helloService.sayHello(this.helloText)
+  //   .subscribe(res => {
+  //     const responseJson: any = res.json();
+  //     if (responseJson != null && responseJson.serverResponse != null) {
+  //       this.serverResponseMessage = 
+  //       `Server replied with 
+        
+  //       "${responseJson.serverResponse}"`;
+  //     } else {
+  //       this.serverResponseMessage = "<Empty Reply from Server>";
+  //     }
+  //     console.log(responseJson);
+  //   });
+  // }
 }
 
 
