@@ -41,7 +41,6 @@ export class DiscoveryFormComponent implements OnInit {
     setTimeout(() => {
         this.graphService.discovery(this.discoveryPath, this.address, this.username, this.password, (err: any) => {
             console.log("Discovery completer with " + err);
-            this.isLoading = false;
             this.complete(err);
         });
     }, 3000);
