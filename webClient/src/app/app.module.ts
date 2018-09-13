@@ -17,7 +17,7 @@ import { HttpModule } from '@angular/http';
 
 
 import { AppComponent } from './app.component';
-import {HelloService} from './services/hello.service';
+import { GraphService } from './services/graph.service';
 
 import { D3Service, D3_DIRECTIVES } from './d3';
 
@@ -38,7 +38,7 @@ import { SHARED_VISUALS } from './visuals/shared';
     FormsModule,
     HttpModule
   ],
-  providers: [HelloService, D3Service],
+  providers: [GraphService, D3Service],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

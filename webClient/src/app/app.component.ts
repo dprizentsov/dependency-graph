@@ -14,7 +14,7 @@ import { Component, Inject } from '@angular/core';
 
 import { Angular2InjectionTokens } from 'pluginlib/inject-resources';
 
-import { HelloService } from './services/hello.service';
+import { GraphService } from './services/graph.service';
 import { Link, Node } from './d3';
 
 import config from './app.config';
@@ -23,7 +23,7 @@ import config from './app.config';
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
-  providers: [HelloService]
+  providers: [GraphService]
 })
 
 export class AppComponent {
@@ -38,13 +38,25 @@ export class AppComponent {
   linksSrc: any;
   nodesSrc: any;
   allNodes: Node[];
+ 
+  discoveryPath: string;
+  gremlinPath: string;
 
   constructor(
     @Inject(Angular2InjectionTokens.PLUGIN_DEFINITION) private pluginDefinition: ZLUX.ContainerPluginDefinition,   
-    private helloService: HelloService) {
-    //is there a better way so that I can get this info into the HelloService constructor instead of calling a set method directly after creation???
-    this.helloService.setDestination(RocketMVD.uriBroker.pluginRESTUri(this.pluginDefinition.getBasePlugin(), 'hello',""));
-    
+    private graphService: GraphService) {
+    this.discoveryPath = RocketMVD.uriBroker.pluginRESTUri(this.pluginDefinition.getBasePlugin(), 'discovery',"");
+    this.gremlinPath = RocketMVD.uriBroker.pluginRESTUri(this.pluginDefinition.getBasePlugin(), 'gremlin',"");
+
+    this.discovery('ALTST5', 'avoinov', 'rocket1', (err) => {
+      if (!err) {
+        this.executeGremlin('g.V()', (err, data) => {
+          console.log('Request success: ' + data);
+          //TODO
+        });
+      }
+    });
+
     this.linksSrc = config.dataSrc.split('\n').map(str => {
       const arr = str.split('=');
       const name = arr[0];
@@ -66,6 +78,30 @@ export class AppComponent {
     //console.log(nodes);
 
     this.makeNodesAndLinks(this.nodesSrc, this.linksSrc, true);
+  }
+
+  discovery(address: string, username: string, password: string, complete: (err: any) => void): void {
+    this.graphService.post(this.discoveryPath, JSON.stringify({
+      address: address,
+      username: username,
+      password: password
+    })).subscribe(res => {
+      console.log(res);
+      complete(null);
+    }, (error: any) => {
+      console.log('Error discovery: ' + error);
+      complete(error);
+    });
+  }
+
+  executeGremlin(query: string, complete: (err: any, result?: string) => void): void {
+    this.graphService.post(this.gremlinPath, query).subscribe(res => {
+      console.log(res);
+      complete(null, res);
+    }, (error: any) => {
+      console.log('Error discovery: ' + error);
+      complete(error);
+    });
   }
 
   links2Nodes (links: any) {

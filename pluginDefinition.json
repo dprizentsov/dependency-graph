@@ -24,7 +24,7 @@
     {
       "type": "router",
       "name": "discovery",
-      "filename": "graphService.js",
+      "filename": "discoveryService.js",
       "routerFactory": "discoveryServiceRouter",
       "dependenciesIncluded": true,
       "initializerLookupMethod": "external"

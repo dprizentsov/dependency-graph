@@ -4,16 +4,11 @@ import { Observable } from 'rxjs/Observable';
 
 @Injectable()
 export class GraphService {
-  private destination:string;
   
   constructor(private http: Http){}
 
-  setDestination(path: string):void {
-    this.destination = path;
-  }
-
-  executeGremlin(query: string): Observable<any> {
-    return this.http.post(this.destination, query);
+  post(path: string, query: string): Observable<any> {
+    return this.http.post(path, query);
   }
 
 }
