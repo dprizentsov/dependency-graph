@@ -48,6 +48,9 @@ export class AppComponent {
     this.discoveryPath = RocketMVD.uriBroker.pluginRESTUri(this.pluginDefinition.getBasePlugin(), 'discovery', "");
     this.gremlinPath = RocketMVD.uriBroker.pluginRESTUri(this.pluginDefinition.getBasePlugin(), 'gremlin', "");
 
+    const el: any = document.querySelector('div.body');
+    el.style.overflow = 'hidden';
+
     /*this.graphService.discovery(this.discoveryPath, 'ALTST5', 'avoynov', 'rocket1', (err) => {
       console.log('Discoveery result: ' + err);
       if (!err) {

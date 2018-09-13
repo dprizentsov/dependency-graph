@@ -7,7 +7,7 @@
     "framework": "angular2",
     "launchDefinition": {
       "pluginShortNameKey": "dependencyGraphTitle",
-      "pluginShortNameDefault": "Dependency Graph",
+      "pluginShortNameDefault": "AS/400 Discovery",
       "imageSrc": "assets/icon.png"
     },
     "descriptionKey": "Dependency Graph Description",
@@ -16,8 +16,8 @@
     "defaultWindowStyle": {
       "x": 0,
       "y": 0,
-      "width": 1100,
-      "height": 800
+      "width": 800,
+      "height": 600
     }
   },
   "dataServices": [
