@@ -10,6 +10,17 @@
     <input [(ngModel)]="password" id="text-input-5" type="password" class="bx--text-input">
     <label for="text-input-5" class="bx--label">Password</label>
 </div>
+<div class="bx--form-requirement">
+    {{errorText}}
+</div>
 <div class="bx--form-item">
     <button class="bx--btn bx--btn--primary" type="button" (click)="discover()">Discover</button>
+</div>
+<div *ngIf='isLoading' class="loading-item">
+    <div data-loading class="bx--loading">
+        <svg class="bx--loading__svg" viewBox="-75 -75 150 150">
+            <title>Loading</title>
+            <circle cx="0" cy="0" r="37.5" />
+        </svg>
+    </div>
 </div>

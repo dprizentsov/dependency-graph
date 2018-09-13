@@ -18,7 +18,7 @@ export class DiscoveryFormComponent implements OnInit {
     // username: string;
     // password: string;
 
-    
+    isLoading: boolean = false;
 
 
 
@@ -37,9 +37,13 @@ export class DiscoveryFormComponent implements OnInit {
   
   discover(): void {
     console.log("Pshhh");
-    this.graphService.discovery(this.discoveryPath, this.address, this.username, this.password, (err: any) => {
-        console.log("Discovery completer with " + err);
-        this.complete(err);
-    });
+    this.isLoading = true;
+    setTimeout(() => {
+        this.graphService.discovery(this.discoveryPath, this.address, this.username, this.password, (err: any) => {
+            console.log("Discovery completer with " + err);
+            this.isLoading = false;
+            this.complete(err);
+        });
+    }, 3000);
   }
 }

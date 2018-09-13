@@ -17,8 +17,8 @@
           <option *ngFor="let node of allNodes" [value]="node.id">{{node.id + ' (' +node.linkCount + ')'}}</option>
       </select> -->
     </div>
-    <discovery-form [complete]="onDiscovered.bind(this)" ></discovery-form>
-    <graph [nodes]="nodes" [links]="links"></graph>
+    <discovery-form *ngIf="nodes.length == 0" [complete]="onDiscovered.bind(this)" ></discovery-form>
+    <graph *ngIf="nodes.length > 0" [nodes]="nodes" [links]="links"></graph>
 
   </div>
 </div>
