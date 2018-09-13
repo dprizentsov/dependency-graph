@@ -24,13 +24,16 @@ import { D3Service, D3_DIRECTIVES } from './d3';
 import { GraphComponent } from './visuals/graph/graph.component';
 import { SHARED_VISUALS } from './visuals/shared';
 
+import { DiscoveryFormComponent } from  './discoveryForm/discoveryForm.component';
+
 
 @NgModule({
   declarations: [
     AppComponent,
     D3_DIRECTIVES,
     GraphComponent,
-    SHARED_VISUALS
+    SHARED_VISUALS,
+    DiscoveryFormComponent
   ],
   imports: [
     // BrowserModule, /* remove this for within-MVD development */

@@ -6,8 +6,8 @@ import { httpRequest } from "./httpRequests";
 const express = require('express');
 const Promise = require('bluebird');
 
-const newtonHost = 'ams-vm-av05';
-const newtonPort = 8888;
+const newtonHost = 'localhost';
+const newtonPort = 8080;
 const discoveryServicePath = '/ws/model/discovery';
 
 class DiscoveryService {
@@ -28,8 +28,12 @@ class DiscoveryService {
         let serverCredentials = JSON.parse(req.body);
         let queryBody = serverCredentials.address + '\n' +  serverCredentials.username + '\n' + serverCredentials.password;
         httpRequest('POST', newtonHost, newtonPort, discoveryServicePath, {}, null, queryBody, function(err, code1, jsonStr) {
-          console.log('  GET result ' + code1 + ': ' + jsonStr);
-          res.status(200).json(jsonStr);
+          if (!err) {
+            console.log('  POST result ' + code1 + ': ' + jsonStr);
+            res.status(code1).json(jsonStr);
+          } else {
+            console.log("Request error: " + err);
+          }
         }, this.httpAgent);
       });
       this.router = router;

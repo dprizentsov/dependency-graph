@@ -48,14 +48,15 @@ export class AppComponent {
     this.discoveryPath = RocketMVD.uriBroker.pluginRESTUri(this.pluginDefinition.getBasePlugin(), 'discovery',"");
     this.gremlinPath = RocketMVD.uriBroker.pluginRESTUri(this.pluginDefinition.getBasePlugin(), 'gremlin',"");
 
-    this.discovery('ALTST5', 'avoinov', 'rocket1', (err) => {
+    /*this.graphService.discovery(this.discoveryPath, 'ALTST5', 'avoynov', 'rocket1', (err) => {
+      console.log('Discoveery result: ' + err);
       if (!err) {
         this.executeGremlin('g.V()', (err, data) => {
           console.log('Request success: ' + data);
           //TODO
         });
       }
-    });
+    });*/
 
     this.linksSrc = config.dataSrc.split('\n').map(str => {
       const arr = str.split('=');
@@ -80,17 +81,10 @@ export class AppComponent {
     this.makeNodesAndLinks(this.nodesSrc, this.linksSrc, true);
   }
 
-  discovery(address: string, username: string, password: string, complete: (err: any) => void): void {
-    this.graphService.post(this.discoveryPath, JSON.stringify({
-      address: address,
-      username: username,
-      password: password
-    })).subscribe(res => {
-      console.log(res);
-      complete(null);
-    }, (error: any) => {
-      console.log('Error discovery: ' + error);
-      complete(error);
+  onDiscovered(err: any): void {
+    console.log('onDiscovered');
+    this.executeGremlin("g.V()", (err: string, result: string) => {
+      console.log('executeGremlin result ' + err + " " + result);
     });
   }
 

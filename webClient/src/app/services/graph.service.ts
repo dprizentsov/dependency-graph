@@ -11,6 +11,19 @@ export class GraphService {
     return this.http.post(path, query);
   }
 
+  discovery(discoveryPath: string, address: string, username: string, password: string, complete: (err: any) => void): void {
+    this.post(discoveryPath, JSON.stringify({
+      address: address,
+      username: username,
+      password: password
+    })).subscribe(res => {
+      console.log(res);
+      complete(null);
+    }, (error: any) => {
+      console.log('Error discovery: ' + error);
+      complete(error);
+    });
+  }
 }
 
 /*

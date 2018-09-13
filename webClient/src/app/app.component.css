@@ -29,3 +29,8 @@ h1 {
   Copyright Contributors to the Zowe Project.
 */
 
+discovery-form {
+  width: 400px;
+  margin: 5rem auto 0 auto;
+  display: block;
+}

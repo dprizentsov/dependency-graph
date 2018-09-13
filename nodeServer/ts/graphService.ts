@@ -6,8 +6,8 @@ import { httpRequest } from "./httpRequests";
 const express = require('express');
 const Promise = require('bluebird');
 
-const newtonHost = 'ams-vm-av05';
-const newtonPort = 8888;
+const newtonHost = 'localhost';
+const newtonPort = 8080;
 const graphServicePath = '/ws/model/gremlin';
 
 class GraphService {
