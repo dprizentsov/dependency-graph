@@ -17,7 +17,7 @@ import { Angular2InjectionTokens } from 'pluginlib/inject-resources';
 import { GraphService } from './services/graph.service';
 import { Link, Node } from './d3';
 
-import config from './app.config';
+// import config from './app.config';
 
 @Component({
   selector: 'app-root',
@@ -58,22 +58,25 @@ export class AppComponent {
       }
     });*/
 
-    this.linksSrc = config.dataSrc.split('\n').map(str => {
-      const arr = str.split('=');
-      const name = arr[0];
-      let parents: any[] = [];
-      if(arr[1].trim() !== ''){
-        parents = arr[1].split(' ').filter(str => str !== '');
-      }
-      return {
-        name,
-        parents
-      }
-    });
+    // this.linksSrc = config.dataSrc.split('\n').map(str => {
+    //   const arr = str.split('=');
+    //   const name = arr[0];
+    //   let parents: any[] = [];
+    //   if(arr[1].trim() !== ''){
+    //     parents = arr[1].split(' ').filter(str => str !== '');
+    //   }
+    //   return {
+    //     name,
+    //     parents
+    //   }
+    // });
 
-    this.nodesSrc = this.links2Nodes(this.linksSrc);
+    // this.nodesSrc = this.links2Nodes(this.linksSrc);
 
-    console.log(this.nodesSrc);
+    // console.log(this.nodesSrc);
+
+    this.nodesSrc = [];
+    this.linksSrc = [];
 
     //console.log(edges);
     //console.log(nodes);
@@ -83,8 +86,30 @@ export class AppComponent {
 
   onDiscovered(err: any): void {
     console.log('onDiscovered');
-    this.executeGremlin("g.V()", (err: string, result: string) => {
-      console.log('executeGremlin result ' + err + " " + result);
+    this.executeGremlin("g.V()", (err: string, nodesResult: any) => {
+      console.log('executeGremlin nodesResult ' + err + " " + nodesResult);
+      this.executeGremlin("g.E()", (err: string, edgesResult: any) => {
+        console.log('executeGremlin edgesResult ' + err + " " + edgesResult);
+        // console.log(nodesResult._body);
+        let nodesSrc = JSON.parse(JSON.parse(nodesResult._body)).result.data;
+        let edgesSrc = JSON.parse(JSON.parse(edgesResult._body)).result.data;
+        console.log(nodesSrc);
+        console.log(edgesSrc);
+
+        this.nodes = nodesSrc.map( (vertex: any) => {
+          const node = new Node(String(vertex.id), vertex.properties.name[0].value);
+          //node.linkCount = nodesSrc[name];
+          return node;
+        });
+
+        this.links = edgesSrc.map( (edge: any) => {
+          return {
+            source: String(edge.inV),
+            target: String(edge.outV),
+            value: 1
+          };
+        });
+      });
     });
   }
 
@@ -117,7 +142,7 @@ export class AppComponent {
 
   makeNodesAndLinks(nodesSrc: any, linksSrc: any, initAllNodes: any): any {
     this.nodes = Object.keys(nodesSrc).map( name => {
-      const node = new Node(name);
+      const node = new Node(name, name);
       node.linkCount = nodesSrc[name];
       return node;
     });

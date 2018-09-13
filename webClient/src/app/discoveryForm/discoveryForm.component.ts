@@ -11,9 +11,16 @@ import { GraphService } from '../services/graph.service';
 export class DiscoveryFormComponent implements OnInit {
     @Input() complete: (err: any)=>void;
     discoveryPath: string;
-    address: string;
-    username: string;
-    password: string;
+    address: string = 'ALTST5';
+    username: string = 'avoynov';
+    password: string = 'rocket1';
+    // address: string;
+    // username: string;
+    // password: string;
+
+    
+
+
 
 
     constructor(@Inject(Angular2InjectionTokens.PLUGIN_DEFINITION) private pluginDefinition: ZLUX.ContainerPluginDefinition,   
